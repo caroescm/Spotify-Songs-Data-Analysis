@@ -1,7 +1,9 @@
 TLDR: JOINS
 
 1. Getting the full picture: Analyzing from the six main genres, what is the average of every audio feature?
-
+<details>
+<summary>Click to see SQL code</summary>
+    
 ```sql
 WITH unique_track_genre AS (
     SELECT DISTINCT
@@ -32,6 +34,9 @@ FROM unique_track_genre
 GROUP BY playlist_genre
 ORDER BY avg_popularity DESC;
 ```
+
+</details>
+
 Results:
 | playlist_genre | unique_tracks_in_genre | avg_danceability | avg_energy | avg_valence | avg_speechiness | avg_acousticness | avg_instrumentalness | avg_liveness | avg_loudness_db | avg_tempo_bpm | avg_duration_sec | avg_popularity |
 |----------------|------------------------|------------------|------------|-------------|-----------------|------------------|----------------------|--------------|-----------------|---------------|------------------|----------------|
@@ -102,4 +107,30 @@ WITH genre_stats AS (
 | Most popular genre             | pop   | 47.7   |
 | Least popular genre            | edm   | 35     |
 
+3. Trends across the decades:
+```sql
+SELECT
+    (LEFT(a.album_release_date, 4)::INTEGER / 10) * 10 AS decade,
+    COUNT(*) AS n_tracks,
+    ROUND(AVG(t.loudness)::numeric, 2)     AS avg_loudness_db,
+    ROUND(AVG(t.energy)::numeric, 3)       AS avg_energy,
+    ROUND(AVG(t.danceability)::numeric, 3) AS avg_danceability,
+    ROUND(AVG(t.tempo)::numeric, 1)        AS avg_tempo,
+    ROUND(AVG(t.duration_ms) / 1000.0, 1)  AS avg_duration_sec,
+    ROUND(AVG(t.track_popularity)::numeric, 1) AS avg_popularity
+FROM tracks t
+JOIN albums a ON t.album_id = a.album_id
+WHERE a.album_release_date IS NOT NULL
+GROUP BY decade
+ORDER BY decade;
+```
+| decade | n_tracks | avg_loudness_db | avg_energy | avg_danceability | avg_tempo | avg_duration_sec |
+|--------|----------|-----------------|------------|------------------|-----------|------------------|
+| 1960   | 132      | -9.92           | 0.591      | 0.514            | 122.9     | 217.6            |
+| 1970   | 783      | -9.69           | 0.638      | 0.54             | 123.2     | 257.1            |
+| 1980   | 1090     | -9.49           | 0.695      | 0.61             | 121.4     | 268              |
+| 1990   | 2081     | -8.55           | 0.665      | 0.668            | 115.8     | 265.1            |
+| 2000   | 3807     | -6.64           | 0.714      | 0.646            | 119.3     | 247.6            |
+| 2010   | 19834    | -6.39           | 0.703      | 0.661            | 121.6     | 216.1            |
+| 2020   | 626      | -6.89           | 0.672      | 0.668            | 122       | 194.5            |
 4. 
