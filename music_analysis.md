@@ -17,16 +17,16 @@ WITH unique_track_genre AS (
 SELECT
     playlist_genre,
     COUNT(*) AS unique_tracks_in_genre,
-    ROUND(AVG(danceability)::numeric, 3)     AS avg_danceability,
-    ROUND(AVG(energy)::numeric, 3)           AS avg_energy,
-    ROUND(AVG(valence)::numeric, 3)          AS avg_valence,
-    ROUND(AVG(speechiness)::numeric, 3)      AS avg_speechiness,
-    ROUND(AVG(acousticness)::numeric, 3)     AS avg_acousticness,
+    ROUND(AVG(danceability)::numeric, 3) AS avg_danceability,
+    ROUND(AVG(energy)::numeric, 3) AS avg_energy,
+    ROUND(AVG(valence)::numeric, 3) AS avg_valence,
+    ROUND(AVG(speechiness)::numeric, 3) AS avg_speechiness,
+    ROUND(AVG(acousticness)::numeric, 3) AS avg_acousticness,
     ROUND(AVG(instrumentalness)::numeric, 4) AS avg_instrumentalness,
-    ROUND(AVG(liveness)::numeric, 3)         AS avg_liveness,
-    ROUND(AVG(loudness)::numeric, 2)         AS avg_loudness_db,
-    ROUND(AVG(tempo)::numeric, 1)            AS avg_tempo_bpm,
-    ROUND(AVG(duration_ms) / 1000.0, 1)      AS avg_duration_sec,
+    ROUND(AVG(liveness)::numeric, 3) AS avg_liveness,
+    ROUND(AVG(loudness)::numeric, 2) AS avg_loudness_db,
+    ROUND(AVG(tempo)::numeric, 1) AS avg_tempo_bpm,
+    ROUND(AVG(duration_ms) / 1000.0, 1) AS avg_duration_sec,
     ROUND(AVG(track_popularity)::numeric, 1) AS avg_popularity
 FROM unique_track_genre
 GROUP BY playlist_genre
