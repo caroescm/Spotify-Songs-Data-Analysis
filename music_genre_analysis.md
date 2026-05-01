@@ -113,6 +113,9 @@ WITH genre_stats AS (
 | Least popular genre            | edm   | 35     |
 
 3. Trends across the decades:
+<details>
+<summary>Click to see SQL code</summary>
+
 ```sql
 SELECT
     (LEFT(a.album_release_date, 4)::INTEGER / 10) * 10 AS decade,
@@ -138,6 +141,8 @@ ORDER BY decade;
 | 2000   | 3807     | -6.64           | 0.714      | 0.646            | 119.3     | 247.6            |
 | 2010   | 19834    | -6.39           | 0.703      | 0.661            | 121.6     | 216.1            |
 | 2020   | 626      | -6.89           | 0.672      | 0.668            | 122       | 194.5            |
+
+</details>
 
 4. Surprise Hits
 
