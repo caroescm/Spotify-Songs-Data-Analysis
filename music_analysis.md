@@ -1,6 +1,6 @@
 TLDR: JOINS
 \
-1. Getting the full picture: Analyzing from the six main genres, what is the average of every audio feature?
+1. **Getting the full picture: Analyzing from the six main genres, what is the average of every audio feature?**
 <details>
 <summary>Click to see SQL code</summary>
     
@@ -46,6 +46,14 @@ Results:
 | rock           | 4451                   | 0.52             | 0.733      | 0.535       | 0.058           | 0.147            | 0.0656               | 0.205        | -7.54           | 125.1         | 247.8            | 40.4           |
 | r&b            | 4948                   | 0.672            | 0.592      | 0.536       | 0.118           | 0.259            | 0.0279               | 0.176        | -7.91           | 114.2         | 238.4            | 39             |
 | edm            | 5537                   | 0.658            | 0.799      | 0.406       | 0.088           | 0.085            | 0.2202               | 0.211        | -5.5            | 125.6         | 223.5            | 34.1           |
+
+<ins> Some key findings:</ins>
+* Pop is the most popular genre, but it's average in all the characteristics. We could say it's popular because 'it has a little bit of everything'
+* The easiest way to detect a rap song (through data) is checking it's speechiness: it's roughly x2- x3 times the rate for other genres.
+* Latin music tends to be the happiest (highest on valence) and in danceability (tied with rap). It's core to the sub-genres within this genre.
+* Rock listeners are less likely to be listening mainstream genres. It has the lowest danceability, speechiness, longest average duration and low popularity.
+* EDM has the highest energy, yet the lowest valence: energetic, but emotionally cold. It's the only genre where this occurs in such proportion.
+
 
 2. Characteristics per genre:
 <details>
