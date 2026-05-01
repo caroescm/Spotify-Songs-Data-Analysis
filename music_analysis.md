@@ -1,5 +1,3 @@
-TLDR: JOINS
-\
 1. **Getting the full picture: Analyzing from the six main genres, what is the average of every audio feature?**
 <details>
 <summary>Click to see SQL code</summary>
