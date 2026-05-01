@@ -48,6 +48,9 @@ Results:
 | edm            | 5537                   | 0.658            | 0.799      | 0.406       | 0.088           | 0.085            | 0.2202               | 0.211        | -5.5            | 125.6         | 223.5            | 34.1           |
 
 2. Characteristics per genre:
+<details>
+<summary>Click to see SQL code</summary>
+    
 ``` sql
 WITH genre_stats AS (
     SELECT
@@ -86,6 +89,8 @@ WITH genre_stats AS (
 (SELECT 'Most popular genre', genre, popularity FROM genre_stats ORDER BY popularity DESC LIMIT 1) UNION ALL
 (SELECT 'Least popular genre', genre, popularity FROM genre_stats ORDER BY popularity ASC LIMIT 1);
 ```
+</details>
+
 | finding                        | genre | value  |
 |--------------------------------|-------|--------|
 | Loudest genre                  | edm   | -5.45  |
