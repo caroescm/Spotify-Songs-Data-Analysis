@@ -11,8 +11,8 @@ WITH unique_track_genre AS (
         t.acousticness, t.instrumentalness, t.liveness,
         t.loudness, t.tempo, t.duration_ms, t.track_popularity
     FROM tracks t
-    JOIN track_playlist tp ON t.track_id = tp.track_id
-    JOIN playlists p       ON tp.playlist_id = p.playlist_id
+    JOIN track_playlist AS tp ON t.track_id = tp.track_id
+    JOIN playlists AS p ON tp.playlist_id = p.playlist_id
 )
 SELECT
     playlist_genre,
