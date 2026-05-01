@@ -138,4 +138,92 @@ ORDER BY decade;
 | 2000   | 3807     | -6.64           | 0.714      | 0.646            | 119.3     | 247.6            |
 | 2010   | 19834    | -6.39           | 0.703      | 0.661            | 121.6     | 216.1            |
 | 2020   | 626      | -6.89           | 0.672      | 0.668            | 122       | 194.5            |
-4. 
+
+4. Surprise Hits
+
+<details>
+<summary>Click here to see SQL code</summary>
+    
+```sql
+WITH track_genre AS (
+    SELECT DISTINCT
+        t.track_id, t.track_name, t.track_artist, t.track_popularity,
+        t.danceability, t.energy, t.valence, t.acousticness,
+        t.speechiness, t.liveness,
+        p.playlist_genre AS genre
+    FROM tracks t
+    JOIN track_playlist tp ON t.track_id = tp.track_id
+    JOIN playlists p       ON tp.playlist_id = p.playlist_id
+),
+deduped AS (
+    -- Keep one row per (track_name, track_artist), keeping the most popular version
+    SELECT DISTINCT ON (track_name, track_artist)
+        track_id, track_name, track_artist, track_popularity,
+        danceability, energy, valence, acousticness, speechiness, liveness, genre
+    FROM track_genre
+    ORDER BY track_name, track_artist, track_popularity DESC
+),
+hit_profile AS (
+    SELECT
+        genre,
+        AVG(danceability)  AS h_danceability,
+        AVG(energy)        AS h_energy,
+        AVG(valence)       AS h_valence,
+        AVG(acousticness)  AS h_acousticness,
+        AVG(speechiness)   AS h_speechiness,
+        AVG(liveness)      AS h_liveness
+    FROM deduped
+    WHERE track_popularity >= 70
+    GROUP BY genre
+),
+distance_to_hit AS (
+    SELECT
+        d.track_id, d.track_name, d.track_artist,
+        d.genre, d.track_popularity,
+        SQRT(
+            POWER(d.danceability - hp.h_danceability, 2) +
+            POWER(d.energy       - hp.h_energy,       2) +
+            POWER(d.valence      - hp.h_valence,      2) +
+            POWER(d.acousticness - hp.h_acousticness, 2) +
+            POWER(d.speechiness  - hp.h_speechiness,  2) +
+            POWER(d.liveness     - hp.h_liveness,     2)
+        ) AS distance_from_hit_sound
+    FROM deduped d
+    JOIN hit_profile hp ON d.genre = hp.genre
+)
+SELECT
+    track_name, track_artist, genre, track_popularity,
+    ROUND(distance_from_hit_sound::numeric, 4) AS distance
+FROM distance_to_hit
+WHERE track_popularity >= 80          -- highly popular
+ORDER BY distance_from_hit_sound DESC -- furthest from hit profile first
+LIMIT 25;
+``` 
+</details>
+| track_name                                                | track_artist    | genre | track_popularity | distance |
+|-----------------------------------------------------------|-----------------|-------|------------------|----------|
+| Can We Kiss Forever?                                      | Kina            | latin | 85               | 1.0233   |
+| listen before i go                                        | Billie Eilish   | r&b   | 81               | 1.0001   |
+| i love you                                                | Billie Eilish   | r&b   | 85               | 0.9026   |
+| Bruises                                                   | Lewis Capaldi   | pop   | 86               | 0.8855   |
+| July                                                      | Noah Cyrus      | latin | 88               | 0.8724   |
+| A Gente Fez Amor - Ao Vivo                                | Gusttavo Lima   | edm   | 84               | 0.8676   |
+| Get You The Moon (feat. Snøw)                             | Kina            | pop   | 86               | 0.8577   |
+| When I Was Your Man                                       | Bruno Mars      | latin | 82               | 0.8568   |
+| Good News                                                 | Mac Miller      | edm   | 87               | 0.8494   |
+| lovely (with Khalid)                                      | Billie Eilish   | r&b   | 89               | 0.848    |
+| Hey There Delilah                                         | Plain White T's | pop   | 80               | 0.8435   |
+| you were good to me                                       | Jeremy Zucker   | r&b   | 82               | 0.8382   |
+| You Are The Reason                                        | Calum Scott     | r&b   | 83               | 0.8291   |
+| Invocada (Participação especial de Léo Santana) - Ao vivo | Ludmilla        | edm   | 80               | 0.8161   |
+| bury a friend                                             | Billie Eilish   | pop   | 87               | 0.8073   |
+| i hate u, i love u (feat. olivia o'brien)                 | gnash           | edm   | 81               | 0.8056   |
+| xanny                                                     | Billie Eilish   | r&b   | 83               | 0.7867   |
+| Devil Eyes                                                | Hippie Sabotage | pop   | 81               | 0.7603   |
+| All of Me                                                 | John Legend     | r&b   | 85               | 0.7594   |
+| Falling                                                   | Harry Styles    | r&b   | 88               | 0.7588   |
+| Chanel                                                    | Frank Ocean     | pop   | 82               | 0.7585   |
+| Lose You To Love Me                                       | Selena Gomez    | latin | 93               | 0.7525   |
+| everything i wanted                                       | Billie Eilish   | r&b   | 97               | 0.7339   |
+| Memories                                                  | Maroon 5        | latin | 98               | 0.7212   |
+| If The World Was Ending (feat. Julia Michaels)            | JP Saxe         | latin | 88               | 0.7198   |
