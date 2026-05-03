@@ -212,31 +212,15 @@ LIMIT 25;
 ``` 
 </details>
 
-| track_name                                                | track_artist    | genre | track_popularity | distance |
-|-----------------------------------------------------------|-----------------|-------|------------------|----------|
-| Can We Kiss Forever?                                      | Kina            | latin | 85               | 1.0233   |
-| listen before i go                                        | Billie Eilish   | r&b   | 81               | 1.0001   |
-| i love you                                                | Billie Eilish   | r&b   | 85               | 0.9026   |
-| Bruises                                                   | Lewis Capaldi   | pop   | 86               | 0.8855   |
-| July                                                      | Noah Cyrus      | latin | 88               | 0.8724   |
-| A Gente Fez Amor - Ao Vivo                                | Gusttavo Lima   | edm   | 84               | 0.8676   |
-| Get You The Moon (feat. Snøw)                             | Kina            | pop   | 86               | 0.8577   |
-| When I Was Your Man                                       | Bruno Mars      | latin | 82               | 0.8568   |
-| Good News                                                 | Mac Miller      | edm   | 87               | 0.8494   |
-| lovely (with Khalid)                                      | Billie Eilish   | r&b   | 89               | 0.848    |
-| Hey There Delilah                                         | Plain White T's | pop   | 80               | 0.8435   |
-| you were good to me                                       | Jeremy Zucker   | r&b   | 82               | 0.8382   |
-| You Are The Reason                                        | Calum Scott     | r&b   | 83               | 0.8291   |
-| Invocada (Participação especial de Léo Santana) - Ao vivo | Ludmilla        | edm   | 80               | 0.8161   |
-| bury a friend                                             | Billie Eilish   | pop   | 87               | 0.8073   |
-| i hate u, i love u (feat. olivia o'brien)                 | gnash           | edm   | 81               | 0.8056   |
-| xanny                                                     | Billie Eilish   | r&b   | 83               | 0.7867   |
-| Devil Eyes                                                | Hippie Sabotage | pop   | 81               | 0.7603   |
-| All of Me                                                 | John Legend     | r&b   | 85               | 0.7594   |
-| Falling                                                   | Harry Styles    | r&b   | 88               | 0.7588   |
-| Chanel                                                    | Frank Ocean     | pop   | 82               | 0.7585   |
-| Lose You To Love Me                                       | Selena Gomez    | latin | 93               | 0.7525   |
-| everything i wanted                                       | Billie Eilish   | r&b   | 97               | 0.7339   |
-| Memories                                                  | Maroon 5        | latin | 98               | 0.7212   |
-| If The World Was Ending (feat. Julia Michaels)            | JP Saxe         | latin | 88               | 0.7198   |
-
+| track_name                      | track_artist  | track_popularity | clean_genre |
+|---------------------------------|---------------|------------------|-------------|
+| Lucid Dreams                    | Juice WRLD    | 92               | edm         |
+| 7 rings                         | Ariana Grande | 90               | pop         |
+| Whine Up                        | Nicky Jam     | 90               | latin       |
+| Goodbyes (feat. Young Thug)     | Post Malone   | 90               | latin       |
+| Trampoline (with ZAYN)          | SHAED         | 90               | pop         |
+| All I Want for Christmas Is You | Mariah Carey  | 90               | r&b         |
+| Yellow Hearts                   | Ant Saunders  | 89               | pop         |
+| It's You                        | Ali Gatie     | 89               | pop         |
+| lovely (with Khalid)            | Billie Eilish | 89               | r&b         |
+| Falling                         | Harry Styles  | 88               | r&b         |
