@@ -156,71 +156,76 @@ ORDER BY decade;
 <summary>Click here to see SQL code</summary>
     
 ```sql
-WITH track_genre AS (
-    SELECT DISTINCT
-        t.track_id, t.track_name, t.track_artist, t.track_popularity,
-        t.danceability, t.energy, t.valence, t.acousticness,
-        t.speechiness, t.liveness,
-        p.playlist_genre AS genre
+WITH single_genre_tracks AS (
+    -- Step 1: keep only tracks unambiguously in one genre
+    SELECT
+        t.track_id,
+        MAX(p.playlist_genre) AS clean_genre
     FROM tracks t
     JOIN track_playlist tp ON t.track_id = tp.track_id
     JOIN playlists p       ON tp.playlist_id = p.playlist_id
+    GROUP BY t.track_id
+    HAVING COUNT(DISTINCT p.playlist_genre) = 1
 ),
-deduped AS (
-    -- Keep one row per (track_name, track_artist), keeping the most popular version
-    SELECT DISTINCT ON (track_name, track_artist)
-        track_id, track_name, track_artist, track_popularity,
-        danceability, energy, valence, acousticness, speechiness, liveness, genre
-    FROM track_genre
-    ORDER BY track_name, track_artist, track_popularity DESC
+clean_tracks AS (
+    -- Step 2: attach audio features and dedupe by (name, artist)
+    SELECT DISTINCT ON (t.track_name, t.track_artist)
+        t.track_id, t.track_name, t.track_artist, t.track_popularity,
+        t.danceability, t.energy, t.valence, t.acousticness,
+        t.speechiness, t.liveness,
+        sgt.clean_genre AS genre
+    FROM tracks t
+    JOIN single_genre_tracks sgt ON t.track_id = sgt.track_id
+    ORDER BY t.track_name, t.track_artist, t.track_popularity DESC
 ),
 hit_profile AS (
+    -- Step 3: define the "sound of a hit" per genre, using only clean data
     SELECT
         genre,
-        AVG(danceability)  AS h_danceability,
-        AVG(energy)        AS h_energy,
-        AVG(valence)       AS h_valence,
-        AVG(acousticness)  AS h_acousticness,
-        AVG(speechiness)   AS h_speechiness,
-        AVG(liveness)      AS h_liveness
-    FROM deduped
+        AVG(danceability) AS h_danceability,
+        AVG(energy)       AS h_energy,
+        AVG(valence)      AS h_valence,
+        AVG(acousticness) AS h_acousticness,
+        AVG(speechiness)  AS h_speechiness,
+        AVG(liveness)     AS h_liveness
+    FROM clean_tracks
     WHERE track_popularity >= 70
     GROUP BY genre
 ),
 distance_to_hit AS (
+    -- Step 4: distance from each clean track to its genre's hit profile
     SELECT
-        d.track_id, d.track_name, d.track_artist,
-        d.genre, d.track_popularity,
+        ct.track_name, ct.track_artist, ct.genre, ct.track_popularity,
         SQRT(
-            POWER(d.danceability - hp.h_danceability, 2) +
-            POWER(d.energy       - hp.h_energy,       2) +
-            POWER(d.valence      - hp.h_valence,      2) +
-            POWER(d.acousticness - hp.h_acousticness, 2) +
-            POWER(d.speechiness  - hp.h_speechiness,  2) +
-            POWER(d.liveness     - hp.h_liveness,     2)
+            POWER(ct.danceability - hp.h_danceability, 2) +
+            POWER(ct.energy       - hp.h_energy,       2) +
+            POWER(ct.valence      - hp.h_valence,      2) +
+            POWER(ct.acousticness - hp.h_acousticness, 2) +
+            POWER(ct.speechiness  - hp.h_speechiness,  2) +
+            POWER(ct.liveness     - hp.h_liveness,     2)
         ) AS distance_from_hit_sound
-    FROM deduped d
-    JOIN hit_profile hp ON d.genre = hp.genre
+    FROM clean_tracks ct
+    JOIN hit_profile hp ON ct.genre = hp.genre
 )
 SELECT
     track_name, track_artist, genre, track_popularity,
     ROUND(distance_from_hit_sound::numeric, 4) AS distance
 FROM distance_to_hit
-WHERE track_popularity >= 80          -- highly popular
-ORDER BY distance_from_hit_sound DESC -- furthest from hit profile first
-LIMIT 25;
+WHERE track_popularity >= 80          -- popular hits
+ORDER BY distance_from_hit_sound DESC -- furthest from hit profile = most surprising
+LIMIT 10;
 ``` 
 </details>
 
-| track_name                      | track_artist  | track_popularity | clean_genre |
-|---------------------------------|---------------|------------------|-------------|
-| Lucid Dreams                    | Juice WRLD    | 92               | edm         |
-| 7 rings                         | Ariana Grande | 90               | pop         |
-| Whine Up                        | Nicky Jam     | 90               | latin       |
-| Goodbyes (feat. Young Thug)     | Post Malone   | 90               | latin       |
-| Trampoline (with ZAYN)          | SHAED         | 90               | pop         |
-| All I Want for Christmas Is You | Mariah Carey  | 90               | r&b         |
-| Yellow Hearts                   | Ant Saunders  | 89               | pop         |
-| It's You                        | Ali Gatie     | 89               | pop         |
-| lovely (with Khalid)            | Billie Eilish | 89               | r&b         |
-| Falling                         | Harry Styles  | 88               | r&b         |
+| track_name                                | track_artist    | genre | track_popularity | distance |
+|-------------------------------------------|-----------------|-------|------------------|----------|
+| Can We Kiss Forever?                      | Kina            | latin | 85               | 1.042    |
+| listen before i go                        | Billie Eilish   | r&b   | 81               | 0.9766   |
+| i love you                                | Billie Eilish   | r&b   | 85               | 0.8763   |
+| Bruises                                   | Lewis Capaldi   | pop   | 86               | 0.8736   |
+| Hey There Delilah                         | Plain White T's | pop   | 80               | 0.8298   |
+| lovely (with Khalid)                      | Billie Eilish   | r&b   | 89               | 0.8225   |
+| i hate u, i love u (feat. olivia o'brien) | gnash           | edm   | 81               | 0.8199   |
+| you were good to me                       | Jeremy Zucker   | r&b   | 82               | 0.8113   |
+| You Are The Reason                        | Calum Scott     | r&b   | 83               | 0.802    |
+| bury a friend                             | Billie Eilish   | pop   | 87               | 0.7963   |
