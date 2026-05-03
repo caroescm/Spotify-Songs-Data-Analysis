@@ -138,6 +138,8 @@ WHERE a.album_release_date IS NOT NULL
 GROUP BY decade
 ORDER BY decade;
 ```
+</details>
+
 | decade | n_tracks | avg_loudness_db | avg_energy | avg_danceability | avg_tempo | avg_duration_sec |
 |--------|----------|-----------------|------------|------------------|-----------|------------------|
 | 1960   | 132      | -9.92           | 0.591      | 0.514            | 122.9     | 217.6            |
@@ -147,8 +149,6 @@ ORDER BY decade;
 | 2000   | 3807     | -6.64           | 0.714      | 0.646            | 119.3     | 247.6            |
 | 2010   | 19834    | -6.39           | 0.703      | 0.661            | 121.6     | 216.1            |
 | 2020   | 626      | -6.89           | 0.672      | 0.668            | 122       | 194.5            |
-
-</details>
 
 4. Surprise Hits
 
