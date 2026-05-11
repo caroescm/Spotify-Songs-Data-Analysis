@@ -150,6 +150,10 @@ ORDER BY decade;
 | 2010   | 19834    | -6.39           | 0.703      | 0.661            | 121.6     | 216.1            |
 | 2020   | 626      | -6.89           | 0.672      | 0.668            | 122       | 194.5            |
 
+* The well-known ‘loudness war’ is real. Music became progressively louder from -9.9 (1960s) to ~-6.4 (2010s)—the closer to 0, the louder.
+* Music has become more rhythm-focused and groove-oriented over time, with a consistent upward trend 0.51 → ~0.66–0.67 between the 1960s and late 20th century.
+* We can see a gap/distinction between the ‘album’ and ‘streaming’ era: Songs got progressively shorter in the transition from the first to the latter (around ~268s in the 80s to ~194s in the 2020s).
+
 4. Surprise Hits
 
 <details>
